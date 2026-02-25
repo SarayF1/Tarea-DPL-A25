@@ -3,6 +3,7 @@ const express = require('express')
 const logger = require('morgan')
 const errorhandler = require('errorhandler')
 const bodyParser = require('body-parser')
+const path = require('path');
 
 // Variables
 let store = {}
@@ -21,6 +22,10 @@ app.use(errorhandler())
 app.get('/accounts', (req, res) => {
     res.status(200).send(store.accounts)
 })
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+})
+
 
 // GET DE UNO ESPECÍFICO
 app.get('/accounts/:id', (req, res) => {
