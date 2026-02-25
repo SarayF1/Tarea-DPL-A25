@@ -1,66 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Cuentas</title>
+    <title>Cuentas</title>
 </head>
-
 <body>
 
-    <h1>Gestión de Cuentas</h1>
+    <h1>Lista de Cuentas</h1>
 
-    <h2>Crear Cuenta</h2>
-    <input type="text" id="name" placeholder="Nombre">
-    <input type="number" id="balance" placeholder="Balance">
-    <button onclick="createAccount()">Crear</button>
+    <div id="lista"></div>
 
-    <h2>Lista de Cuentas</h2>
-    <button onclick="getAccounts()">Actualizar</button>
-    <div id="accountsList"></div>
+    <br>
+
+    <button onclick="irAPI()">Ir a /accounts</button>
 
     <script>
-        const API_URL = "http://localhost:3000/accounts";
+        async function cargar() {
+            const res = await fetch('http://localhost:3000/accounts');
+            const cuentas = await res.json();
 
-        async function getAccounts() {
-            const response = await fetch(API_URL);
-            const accounts = await response.json();
+            const div = document.getElementById('lista');
+            div.innerHTML = '';
 
-            const container = document.getElementById("accountsList");
-            container.innerHTML = "";
-
-            accounts.forEach(acc => {
-                container.innerHTML += `
-                    <div>
-                        <strong>Nombre:</strong> ${acc.name} <br>
-                        <strong>Balance:</strong> ${acc.balance}
-                        <hr>
-                    </div>
+            cuentas.forEach(c => {
+                div.innerHTML += `
+                    <p>Nombre: ${c.name} | Balance: ${c.balance}</p>
                 `;
             });
         }
 
-        async function createAccount() {
-            const name = document.getElementById("name").value;
-            const balance = Number(document.getElementById("balance").value);
-
-            await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ name, balance })
-            });
-
-            document.getElementById("name").value = "";
-            document.getElementById("balance").value = "";
-
-            getAccounts();
+        function irAPI() {
+            window.location.href = 'http://localhost:3000/accounts';
         }
 
-        getAccounts();
+        cargar();
     </script>
 
 </body>
-
 </html>
