@@ -4,24 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Cuentas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        input,
-        button {
-            margin: 5px;
-            padding: 5px;
-        }
-
-        .account {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 5px 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -34,7 +16,7 @@
     <button onclick="createAccount()">Crear</button>
 
     <h2>Lista de Cuentas</h2>
-    <button onclick="getAccounts()">Actualizar Lista</button>
+    <button onclick="getAccounts()">Actualizar</button>
     <div id="accountsList"></div>
 
     <script>
@@ -47,13 +29,12 @@
             const container = document.getElementById("accountsList");
             container.innerHTML = "";
 
-            accounts.forEach((acc, index) => {
+            accounts.forEach(acc => {
                 container.innerHTML += `
-                    <div class="account">
-                        <strong>ID:</strong> ${index} <br>
-                        <strong>Nombre:</strong> ${acc.name || ''} <br>
-                        <strong>Balance:</strong> ${acc.balance || ''} <br>
-                        <button onclick="deleteAccount(${index})">Eliminar</button>
+                    <div>
+                        <strong>Nombre:</strong> ${acc.name} <br>
+                        <strong>Balance:</strong> ${acc.balance}
+                        <hr>
                     </div>
                 `;
             });
@@ -61,7 +42,7 @@
 
         async function createAccount() {
             const name = document.getElementById("name").value;
-            const balance = document.getElementById("balance").value;
+            const balance = Number(document.getElementById("balance").value);
 
             await fetch(API_URL, {
                 method: "POST",
@@ -71,18 +52,12 @@
                 body: JSON.stringify({ name, balance })
             });
 
-            getAccounts();
-        }
-
-        async function deleteAccount(id) {
-            await fetch(`${API_URL}/${id}`, {
-                method: "DELETE"
-            });
+            document.getElementById("name").value = "";
+            document.getElementById("balance").value = "";
 
             getAccounts();
         }
 
-        // Cargar cuentas al iniciar
         getAccounts();
     </script>
 
